@@ -1,0 +1,83 @@
+<html>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <title> VUE 4º ENTREGA VERONICA LARA </title>
+</head>
+<body>
+
+
+<div id="app" class="container">
+    <h1> Chariot shopping </h1>
+
+    <ul class="list-group">
+        <chariot v-for="chariot in chariots" :chariot="chariot" :selected.sync="selected"></chariot>
+    </ul>
+
+</div>
+
+<template id="chariot-template">
+
+    <li class="list-group-item">
+        <h2>{{ chariot.name }} chariot has {{ chariot.horses }} horse(s)</h2>
+    
+        <button @click="ride(chariot)" class="btn btn-info" :disabled="selectChariot">
+            {{ action }}
+        </button>
+    </li>
+</template>
+</body>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
+
+<script>
+    Vue.component('chariot', {
+        props: ['chariot', 'selected'],
+        template: "#chariot-template",
+        methods: {
+            ride: function (chariot) {
+                this.selected = chariot;
+            },
+        },
+        computed: {
+        
+            moreHorses: function () {
+                return this.selected.horses < this.chariot.horses
+            },
+        
+            selectChariot: function () {
+                return this.selected.name == this.chariot.name
+            },
+        
+            noChariot: function () {
+                return this.selected.name == null;
+            },
+        
+            action: function () {
+                if (this.noChariot) {
+                    action = 'Pick Chariot'
+                } else if (this.selectChariot) {
+                    action = 'Riding!'
+                } else if (this.moreHorses) {
+                    action = 'Hire Horses'
+                } else {
+                    action = 'Dismiss Horses'
+                }
+                return action;
+            }
+        }
+    });
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            chariots: [
+                {name: "Olympus", horses: 4},
+                {name: "Sagitta", horses: 3},
+                {name: "Icarus", horses: 2},
+                {name: "Abraxas", horses: 1},
+            ],
+        
+            selected: {}
+        }
+    });
+</script>
+</html>
